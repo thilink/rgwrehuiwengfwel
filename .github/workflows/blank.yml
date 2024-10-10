@@ -1,0 +1,135 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+
+jobs:
+  check_changes:
+    runs-on: ubuntu-latest
+    outputs:
+      folder0_changed: ${{ steps.check_folder0.outputs.changed }}
+      folder1_changed: ${{ steps.check_folder1.outputs.changed }}
+      folder2_changed: ${{ steps.check_folder2.outputs.changed }}
+      folder3_changed: ${{ steps.check_folder3.outputs.changed }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Check for changes in folder0
+        id: check_folder0
+        run: |
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^00/'; then
+            echo "::set-output name=changed::true"
+          else
+            echo "::set-output name=changed::false"
+          fi
+      - name: Check for changes in folder1
+        id: check_folder1
+        run: |
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^01'; then
+            echo "::set-output name=changed::true"
+          else
+            echo "::set-output name=changed::false"
+          fi
+      - name: Check for changes in folder2
+        id: check_folder2
+        run: |
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^02'; then
+            echo "::set-output name=changed::true"
+          else
+            echo "::set-output name=changed::false"
+          fi
+      - name: Check for changes in folder3
+        id: check_folder3
+        run: |
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^03'; then
+            echo "::set-output name=changed::true"
+          else
+            echo "::set-output name=changed::false"
+          fi          
+
+  job1:
+    runs-on: ubuntu-latest
+    needs: check_changes
+    if: needs.check_changes.outputs.folder0_changed == 'true'
+    steps:
+      - name: Terraform Init
+        run: echo terraform init 00,01,02,03
+      - name: Terraform Plan
+        run: echo terraform plan 00,01,02,03
+      - name: Terraform Apply
+        run: echo terraform apply 00,01,02,03
+
+  approval1:
+    runs-on: ubuntu-latest
+    needs: job1
+    if: success()
+    environment: approval-env
+    steps:
+      - name: Awaiting approval
+        run: echo "Awaiting manual approval for Job 2..."
+
+  job2:
+    runs-on: ubuntu-latest
+    needs: approval1
+    if: needs.check_changes.outputs.folder1_changed == 'true' && needs.check_changes.outputs.folder2_changed == 'true' && needs.check_changes.outputs.folder3_changed == 'true'
+    steps:
+      - name: Terraform Init
+        run: echo terraform init
+      - name: Terraform Plan
+        run: echo terraform plan
+      - name: Terraform Apply
+        run: echo terraform apply
+
+  approval2:
+    runs-on: ubuntu-latest
+    needs: job2
+    if: success()
+    environment: approval-env
+    steps:
+      - name: Awaiting approval
+        run: echo "Awaiting manual approval for Job 3..."
+
+  job3:
+    runs-on: ubuntu-latest
+    needs: approval2
+    if: needs.check_changes.outputs.folder1_changed == 'true' && needs.check_changes.outputs.folder2_changed == 'true' && needs.check_changes.outputs.folder3_changed == 'true'
+    steps:
+      - name: Terraform Init
+        run: echo terraform init
+      - name: Terraform Plan
+        run: echo terraform plan
+      - name: Terraform Apply
+        run: echo terraform apply
+
+  approval3:
+    runs-on: ubuntu-latest
+    needs: job3
+    if: success()
+    environment: approval-env
+    steps:
+      - name: Awaiting approval
+        run: echo "Awaiting manual approval for Job 4..."
+
+  job4:
+    runs-on: ubuntu-latest
+    needs: approval3
+    if: needs.check_changes.outputs.folder1_changed == 'true' && needs.check_changes.outputs.folder2_changed == 'true' && needs.check_changes.outputs.folder3_changed == 'true'
+    steps:
+      - name: Terraform Init
+        run: echo terraform init
+      - name: Terraform Plan
+        run: echo terraform plan
+      - name: Terraform Apply
+        run: echo terraform apply
