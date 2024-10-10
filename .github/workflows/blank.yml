@@ -30,34 +30,34 @@ jobs:
         id: check_folder0
         run: |
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^00/'; then
-            echo "::set-output name=changed::true"
+            echo "folder0_changed=true" >> $GITHUB_ENV
           else
-            echo "::set-output name=changed::false"
+            echo "folder0_changed=false" >> $GITHUB_ENV
           fi
       - name: Check for changes in folder1
         id: check_folder1
         run: |
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^01'; then
-            echo "::set-output name=changed::true"
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^01/'; then
+            echo "folder1_changed=true" >> $GITHUB_ENV
           else
-            echo "::set-output name=changed::false"
+            echo "folder1_changed=false" >> $GITHUB_ENV
           fi
       - name: Check for changes in folder2
         id: check_folder2
         run: |
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^02'; then
-            echo "::set-output name=changed::true"
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^02/'; then
+            echo "folder2_changed=true" >> $GITHUB_ENV
           else
-            echo "::set-output name=changed::false"
+            echo "folder2_changed=false" >> $GITHUB_ENV
           fi
       - name: Check for changes in folder3
         id: check_folder3
         run: |
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^03'; then
-            echo "::set-output name=changed::true"
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^03/'; then
+            echo "folder3_changed=true" >> $GITHUB_ENV
           else
-            echo "::set-output name=changed::false"
-          fi          
+            echo "folder3_changed=false" >> $GITHUB_ENV
+          fi         
 
   job1:
     runs-on: ubuntu-latest
