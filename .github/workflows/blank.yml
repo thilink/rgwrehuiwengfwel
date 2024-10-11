@@ -19,10 +19,10 @@ jobs:
   check_changes:
     runs-on: ubuntu-latest
     outputs:
-      folder0_changed: ${{ steps.check_folder0.outputs.changed }}
-      folder1_changed: ${{ steps.check_folder1.outputs.changed }}
-      folder2_changed: ${{ steps.check_folder2.outputs.changed }}
-      folder3_changed: ${{ steps.check_folder3.outputs.changed }}
+      folder0_changed: ${{ steps.check_folder0.outputs.folder0_changed }}
+      folder1_changed: ${{ steps.check_folder1.outputs.folder1_changed }}
+      folder2_changed: ${{ steps.check_folder2.outputs.folder2_changed }}
+      folder3_changed: ${{ steps.check_folder3.outputs.folder3_changed }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -68,8 +68,7 @@ jobs:
   job1:
     runs-on: ubuntu-latest
     needs: check_changes
-    #if: needs.check_changes.outputs.folder0_changed == 'true'
-    if: env.folder0_changed == 'true'
+    if: needs.check_changes.outputs.folder0_changed == 'true'
     steps:
       - name: Terraform Init
         run: echo terraform init 00,01,02,03
