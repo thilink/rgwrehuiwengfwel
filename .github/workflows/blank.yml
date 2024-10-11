@@ -64,7 +64,6 @@ jobs:
   job1:
     runs-on: ubuntu-latest
     needs: check_changes
-    if: ${{needs.check_changes.outputs.folder0_changed}} == 'true'
     steps:
       - name: check
         run: echo ${{needs.check_changes.outputs.folder0_changed}}  
