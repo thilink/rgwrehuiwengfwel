@@ -65,8 +65,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: check_changes
     steps:
-      - name: check
-        run: echo ${{needs.check_changes.outputs.folder0_changed}}  
       - name: Terraform Init
         run: | 
             if ${{needs.check_changes.outputs.folder0_changed}} == 'true'; then
@@ -75,9 +73,12 @@ jobs:
               echo no terraform    
             fi  
       - name: Terraform Plan
-        run: echo terraform plan 00,01,02,03
-      - name: Terraform Apply
-        run: echo terraform apply 00,01,02,03
+        run: | 
+            if ${{needs.check_changes.outputs.folder0_changed}} == 'true'; then
+               echo terraform plan 00
+            else 
+              echo no terraform    
+            fi 
 
   approval1:
     runs-on: ubuntu-latest
@@ -91,53 +92,11 @@ jobs:
   job2:
     runs-on: ubuntu-latest
     needs: approval1
-    if: needs.check_changes.outputs.folder1_changed == 'true' && needs.check_changes.outputs.folder2_changed == 'true' && needs.check_changes.outputs.folder3_changed == 'true'
     steps:
-      - name: Terraform Init
-        run: echo terraform init
-      - name: Terraform Plan
-        run: echo terraform plan
       - name: Terraform Apply
-        run: echo terraform apply
-
-  approval2:
-    runs-on: ubuntu-latest
-    needs: job2
-    if: success()
-    environment: approval-env
-    steps:
-      - name: Awaiting approval
-        run: echo "Awaiting manual approval for Job 3..."
-
-  job3:
-    runs-on: ubuntu-latest
-    needs: approval2
-    if: needs.check_changes.outputs.folder1_changed == 'true' && needs.check_changes.outputs.folder2_changed == 'true' && needs.check_changes.outputs.folder3_changed == 'true'
-    steps:
-      - name: Terraform Init
-        run: echo terraform init
-      - name: Terraform Plan
-        run: echo terraform plan
-      - name: Terraform Apply
-        run: echo terraform apply
-
-  approval3:
-    runs-on: ubuntu-latest
-    needs: job3
-    if: success()
-    environment: approval-env
-    steps:
-      - name: Awaiting approval
-        run: echo "Awaiting manual approval for Job 4..."
-
-  job4:
-    runs-on: ubuntu-latest
-    needs: approval3
-    if: needs.check_changes.outputs.folder1_changed == 'true' && needs.check_changes.outputs.folder2_changed == 'true' && needs.check_changes.outputs.folder3_changed == 'true'
-    steps:
-      - name: Terraform Init
-        run: echo terraform init
-      - name: Terraform Plan
-        run: echo terraform plan
-      - name: Terraform Apply
-        run: echo terraform apply
+        run: | 
+            if ${{needs.check_changes.outputs.folder0_changed}} == 'true'; then
+               echo terraform apply 00
+            else 
+              echo no terraform    
+            fi
