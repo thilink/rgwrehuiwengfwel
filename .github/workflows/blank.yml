@@ -31,7 +31,7 @@ jobs:
       - name: Check for changes in folder0
         id: check_folder0
         run: |
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^00/'; then
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -r 00/; then
             echo "folder0_changed=true" >> $GITHUB_ENV
           else
             echo "folder0_changed=false" >> $GITHUB_ENV
