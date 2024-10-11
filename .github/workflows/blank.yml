@@ -41,7 +41,7 @@ jobs:
           changed: false
       - name: Set output for folder0
         id: set_output_folder0
-        run: echo "::set-output name=changed::${{ env.changed }}"  
+        run: echo "folder0_changed=${{ env.folder0_changed }}" >> $GITHUB_ENV 
       - name: Check for changes in folder1
         id: check_folder1
         run: |
