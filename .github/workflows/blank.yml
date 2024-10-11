@@ -40,27 +40,30 @@ jobs:
       - name: Check for changes in folder1
         id: check_folder1
         run: |
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^00/'; then
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^01/'; then
             echo "folder1_changed=true" >> $GITHUB_ENV
           else
             echo "folder1_changed=false" >> $GITHUB_ENV
           fi
+          echo "$GITHUB_ENV"
       - name: Check for changes in folder2
         id: check_folder2
         run: |
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^00/'; then
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^02/'; then
             echo "folder2_changed=true" >> $GITHUB_ENV
           else
             echo "folder2_changed=false" >> $GITHUB_ENV
           fi
+          echo "$GITHUB_ENV"
       - name: Check for changes in folder3
         id: check_folder3
         run: |
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^00/'; then
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^03/'; then
             echo "folder3_changed=true" >> $GITHUB_ENV
           else
             echo "folder3_changed=false" >> $GITHUB_ENV
-          fi         
+          fi
+          echo "$GITHUB_ENV"
 
   job1:
     runs-on: ubuntu-latest
