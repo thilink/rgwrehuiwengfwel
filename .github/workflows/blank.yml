@@ -62,12 +62,17 @@ jobs:
           fi
 
   job1:
-    if: ${{needs.check_changes.outputs.folder0_changed}} == 'true'
     runs-on: ubuntu-latest
     needs: check_changes
+    if: ${{needs.check_changes.outputs.folder0_changed}} == 'true'
     steps:
       - name: check
-        run: echo ${{needs.check_changes.outputs.folder0_changed}}
+        run: |
+            if  ${{needs.check_changes.outputs.folder0_changed}} == 'true' then
+                echo 'true'
+            else 
+                echo ${{needs.check_changes.outputs.folder0_changed}}
+            fi   
       - name: Terraform Init
         run: echo terraform init 00,01,02,03
       - name: Terraform Plan
