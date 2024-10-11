@@ -26,8 +26,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Fetch all history
-        run: git fetch --prune --unshallow
+      - name: Fetch last 2 commits
+        run: git fetch --prune --depth=2
       - name: Check for changes in folder0
         id: check_folder0
         run: |
