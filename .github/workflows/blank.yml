@@ -19,7 +19,7 @@ jobs:
   check_changes:
     runs-on: ubuntu-latest
     outputs:
-      folder0_changed: ${{ steps.set_output_folder0.outputs.changed }}
+      folder0_changed: ${{ steps.check_folder0.outputs.changed }}
       folder1_changed: ${{ steps.check_folder1.outputs.changed }}
       folder2_changed: ${{ steps.check_folder2.outputs.changed }}
       folder3_changed: ${{ steps.check_folder3.outputs.changed }}
@@ -36,12 +36,6 @@ jobs:
           else
             echo "changed=false" >> $GITHUB_OUTPUT
           fi
-        shell: bash
-        env:
-          changed: false
-      - name: Set output for folder0
-        id: set_output_folder0
-        run: echo "folder0_changed=${{ env.folder0_changed }}" >> $GITHUB_ENV 
       - name: Check for changes in folder1
         id: check_folder1
         run: |
@@ -70,7 +64,7 @@ jobs:
   job1:
     runs-on: ubuntu-latest
     needs: check_changes
-    if: ${{needs.check_changes.outputs.folder0_changed}} == 'true'
+    #if: ${{needs.check_changes.outputs.folder0_changed}} == 'true'
     steps:
       - name: Terraform Init
         run: | 
