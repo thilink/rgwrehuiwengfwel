@@ -70,9 +70,10 @@ jobs:
         run: echo ${{needs.check_changes.outputs.folder0_changed}}  
       - name: Terraform Init
         run: | 
-            if ${{needs.check_changes.outputs.folder0_changed}} == 'true' then
-                echo terraform init 00,01,02,03
-            else echo no terraform    
+            if ${{needs.check_changes.outputs.folder0_changed}} == 'true'; then
+               echo terraform init 00
+            else 
+              echo no terraform    
             fi  
       - name: Terraform Plan
         run: echo terraform plan 00,01,02,03
